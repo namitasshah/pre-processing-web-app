@@ -7,6 +7,7 @@ __all__ = ['usecols', 'df', 'df_small', 'load_data', 'get_author_names_list', 'e
 import pandas as pd
 import pprint
 import re
+import warnings
 
 # %% ../process_names.ipynb 4
 #Reading Excel file with pandas and choosing the sheet we want to work with
@@ -36,15 +37,6 @@ def load_data(small=False):
         return df.head()
     else:
         return df
-"""
-# Test the function
-dataframe = load_data()
-print("Full DataFrame:")
-print(dataframe)
-
-small_dataframe = load_data(small=True)
-print("\nSmall DataFrame (head):")
-print(small_dataframe)"""
 
 # %% ../process_names.ipynb 12
 def get_author_names_list(author_names):
@@ -52,36 +44,33 @@ def get_author_names_list(author_names):
     author_names_list = author_names.split(', ')
     return author_names_list
 
-# %% ../process_names.ipynb 35
-# TODO: copy-paste your function from above and modify it so that it accounts for new edge cases
-    # Check for any name with first two capital letters
+# %% ../process_names.ipynb 36
+# Fallback to the original splitting
+
 def extract_names(full_name):
-    # Check for any name with first two capital letters
-    pattern_first_two_capital = re.compile(r'^([A-Z])([A-Z])\s+(.*)$')
-    match_first_two_capital = pattern_first_two_capital.match(full_name)
 
-    if match_first_two_capital:
-        last_name = match_first_two_capital.group(3)
-        first_name = match_first_two_capital.group(1)
-        middle_initials = match_first_two_capital.group(2)
-    else:
-        # Fallback to the original splitting
-        names = full_name.split(' ')
-        last_name = names[-1]
-        first_name = names[0]
-        middle_initials = ''.join(names[1:-1]) if len(names) > 2 else None
+    full_name = full_name.replace('.','')
+    names = re.sub( r"([A-Z])", r" \1", full_name).split()
+    #print(names)
+    
+    last_name = names[-1]
+    first_name = names[0]
+    
+    middle_name1 = None
+    middle_name2 = None 
+    middle_name3 = None
 
-    # Extract individual initials from the middle initials
-    if middle_initials:
-        middle_initials_list = [initial.upper() for initial in middle_initials]
-    else:
-        middle_initials_list = []
+    if len(names) > 2:
+        middle_name1 = names[1]
+        if len(names) > 3:
+            middle_name2 = names[2]
+            if len(names) >4:
+                middle_name3 = names[3]
 
-    while len(middle_initials_list) < 2:
-        middle_initials_list.append(None)
+    return (last_name, first_name, middle_name1, middle_name2, middle_name3)
 
-    return (last_name, first_name, middle_initials, None)
+    
+#print(extract_names('Ang G.B. Burnett'))
 
-# Test cases
-# print(extract_names('Brown D Lion'))
 
+### Downside of the re. package is that you can't check for edge cases such as MBtt and raise a warning

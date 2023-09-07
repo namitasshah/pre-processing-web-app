@@ -36,7 +36,7 @@ class Name(str):
         else:
             return self
 
-# %% ../author.ipynb 12
+# %% ../author.ipynb 11
 class Author:
     
     def __init__(self, last, first, middle='', middle2='', middle3='', emails=[]):
@@ -46,6 +46,7 @@ class Author:
         self.middle3 = Name(middle2)
         self.last = Name(last)
         self.emails = emails
+        self.publications = []
 
     def __repr__(self):
         strings = [getattr(self, attr) for attr in ('first', 'middle', 'middle2', 'middle3', 'last') if getattr(self, attr)]
