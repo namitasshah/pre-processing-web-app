@@ -48,10 +48,14 @@ class Author:
         self.emails = emails
         self.publications = []
 
-    def __repr__(self):
+    def full_name(self):
         strings = [getattr(self, attr) for attr in ('first', 'middle', 'middle2', 'middle3', 'last') if getattr(self, attr)]
+        strings = [x for x in strings if x is not None]
         strings = ' '.join(strings)
         return strings
+        
+    def __repr__(self):
+        return self.full_name()
     
     def matches(self, other):
         return (self.first.matches(other.first)
