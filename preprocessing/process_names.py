@@ -26,15 +26,16 @@ df_small
 # TODO: write a function to load the data. Create a parameter called `small` that let's us chose whether to
 # return the whole dataframe or just the head (DONE)
 
-def load_data(small=False):
+def load_data(small=False, filePath='Catalogdatabase-till2018b.xlsx'):
     #Reading Excel file with pandas and choosing the sheet we want to work with
     usecols = ['id', 'title', 'contact_email', 'contact_author_name', 'doi', 'author_names']
     
-    df = pd.read_excel(open('Catalogdatabase-till2018b.xlsx', 'rb'), sheet_name='publication', usecols=usecols)
+    df = pd.read_excel(open(filePath, 'rb'), sheet_name='publication', usecols=usecols)   
+    
 
     #Small or full data frame
     if small:
-        return df.head()
+        return df.tail()
     else:
         return df
 
@@ -45,7 +46,7 @@ def get_author_names_list(author_names):
     return author_names_list
 
 # %% ../process_names.ipynb 36
-# Fallback to the original splitting
+# THIS ONE!!!
 
 def extract_names(full_name):
 
