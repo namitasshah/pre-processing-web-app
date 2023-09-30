@@ -10,15 +10,12 @@ from .publication import Publication
 import pandas as pd
 from sortedcontainers import SortedList
 
-# %% ../create_objects.ipynb 7
-# if author with same name is in list, combine their info
-# else if author is not in list, append it to the list
-
+# %% ../create_objects.ipynb 21
 def add_author_in_list(author_list, new_author):
 
-    
-    
-    for existing_author in author_list:
+    index = author_list.bisect_left(new_author)
+    if index < len(author_list):
+        existing_author = author_list[index]
         if new_author.same_name(existing_author):
             # combine info from each
             existing_author.merge_names(new_author)
@@ -28,13 +25,11 @@ def add_author_in_list(author_list, new_author):
             for publication in new_author.publications:
                 existing_author.publications.append(publication)
             return existing_author
-
-            
     # add new_author to list
     author_list.add(new_author)
     return new_author
 
-# %% ../create_objects.ipynb 20
+# %% ../create_objects.ipynb 31
 def create_objects(databaseFilePath):
         
     df = load_data(small=False, filePath=databaseFilePath)
