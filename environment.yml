@@ -15,4 +15,5 @@ dependencies:
   - voila
   - jupyter
   - notebook
+  - sortedcontainers
   - nbdev
